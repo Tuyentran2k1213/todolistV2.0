@@ -75,7 +75,25 @@ class Todolist extends Component {
             ))}
         </Dropdown>
         <Heading>
-            To do list
+            {(() => {
+              var today = new Date;
+              const day = today.getDate();
+              const month = (() => {
+                var day;
+                if(today.getMonth() == 12) {
+                  day = 1;
+                } else {
+                  day = today.getMonth() + 1;
+                }
+                if(day > 9){
+                  return day;
+                } else {
+                  return `0${day}`
+                }
+              })();
+              const year = today.getFullYear();
+              return `To do list ( on ${day} - ${month} - ${year})`
+            })()}
         </Heading>
 
         <div className='flex flex-column'>
