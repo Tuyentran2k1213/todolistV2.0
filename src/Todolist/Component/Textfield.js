@@ -5,6 +5,7 @@ import { createRef , useEffect } from "react";
 
 const Input = styled.input`
     border: 1px solid ${props => props.theme.color};
+    color: ${props => props.theme.textColor};
     min-height:35px;
     height:35px;
     font-size:17px;

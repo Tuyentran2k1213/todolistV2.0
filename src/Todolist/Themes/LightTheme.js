@@ -1,6 +1,7 @@
 const LightTheme = {
     bgColor: '#fff',
     color:'#7952b3',
+    textColor: '#7952b3',
     borderButton: '1px solid #7952b3',
     borderRadiusButton: 'none',
     hoverTextColor: '#fff',
