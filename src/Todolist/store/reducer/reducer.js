@@ -1,7 +1,8 @@
-import { CHANGE_THEME, ADD_TASK, CHECK_TASK, DELE_TASK, EDIT_TASK, UPDATE_TASK } from "../constant";
+import { CHANGE_THEME, ADD_TASK, CHECK_TASK, DELE_TASK, EDIT_TASK, UPDATE_TASK, SAVE_LIST, UNSAVE_LIST } from "../constant";
 import ArrTheme from "../../Themes";
+import localSer from '../../SaveToLocalStorange';
 
-const initialState = {
+const initialState = localSer.getLocal() ? localSer.getLocal() : ({
     tasks: [
         {
             name: 'task 1',
@@ -29,7 +30,7 @@ const initialState = {
         name: '',
         id: '',
     }
-}
+});
 
 const reducer = (state=initialState, action) => {
     let newState;
@@ -73,9 +74,18 @@ const reducer = (state=initialState, action) => {
             tasks[taskNum].name = action.payload;
             newState = {...state, tasks: tasks};
             break;
+        case SAVE_LIST:
+            localSer.setLocal(state);
+            newState = {...state};
+            break;
+        case UNSAVE_LIST:
+            localSer.deleLocal();
+            newState = { ...state };
+            break;
         default:
             newState = {...state};
     }
+
     return newState;
 }
 

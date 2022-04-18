@@ -1,19 +1,23 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
+import { message } from 'antd';
 import { connect } from 'react-redux'
-import { changeTheme, addTask, checkTask, deleTask, editTask, updateTask } from './store/action' 
+import { changeTheme, addTask, checkTask, deleTask, editTask, updateTask, saveTasks, unsaveTask } from './store/action' 
 import { BiPlusMedical } from 'react-icons/bi'
-import { FaCheck, FaTrashAlt, FaUpload, FaEdit } from 'react-icons/fa'
-import styled, { ThemeProvider } from 'styled-components'
+import { FaCheck, FaTrashAlt, FaUpload, FaEdit, FaSearch, FaSave } from 'react-icons/fa'
+import { RiDeleteBack2Fill } from 'react-icons/ri' 
+import { ThemeProvider } from 'styled-components'
 import ArrTheme from "./Themes";
 import { table } from './Themes'
 import Container from './Container'
 import { Dropdown, Heading, Textfield, Button } from './Component'
+import localSer from './SaveToLocalStorange';
 
 class Todolist extends Component {
 
 
   state = {
     task: '',
+    search: '',
     isUpdate: false,
   }
 
@@ -34,6 +38,32 @@ class Todolist extends Component {
 
   render() {
     // console.log(this.state);
+
+    const searchChange = e => {
+      this.setState({search: e.target.value});
+
+    }
+
+    const newPropsTasks = this.props.tasks?.filter(task => {
+      if(this.state.search == ''){
+            return task;
+          }
+          if(task.name.toLowerCase().includes(this.state.search.toLowerCase())){
+                return task;
+              }
+    })
+
+    
+
+    // ?.filter(task => {
+    //   if(this.state.search == ''){
+    //     return task;
+    //   }
+    //   if(task.toLowerCase().includes(this.state.search.toLowerCase())){
+    //     return task;
+    //   }
+    // })
+
     return (
     <ThemeProvider theme={this.props.themeValue}>
       <Container className='w-50'>
@@ -47,6 +77,10 @@ class Todolist extends Component {
         <Heading>
             To do list
         </Heading>
+
+        <div className='flex flex-column'>
+        
+        <div className='flex'>
         <Textfield
         onChange={e => {
           window.document.title = e.target.value;
@@ -56,22 +90,58 @@ class Todolist extends Component {
         name='task' label='Task name'
         value={this.state.task}
         />
+
         {this.state.isUpdate ? (<Button
             onClick={() => {
               this.setState({isUpdate: false}, this.props.updateTask(this.state.task));
               this.setState({task: ''});
             }}
-            className='ml-2'><FaUpload/> Update task</Button>) : (<Button className='ml-2' 
+            ><FaUpload/> Update task</Button>) : (<Button  
             onClick={() => {
               this.props.addTask(this.state.task);
               this.setState({task: ''});
-              console.log(this.type);
               }}><BiPlusMedical/> Add task</Button>) }
+        </div>
+              
+        </div>
+
         <hr />
+
+        <div>
+              <Textfield
+        onChange={searchChange}
+        id='textField'
+        name='task' label={<div><FaSearch/> Search Task</div>}
+        value={this.state.search}
+        />
+
+        <Button 
+        onClick={() => {
+          this.props.saveTasks();
+          message.loading('saving', 1)
+            .then(() => message.success('save done'))
+        }}>
+          <FaSave/>
+              SAVE
+        </Button>
+
+        <Button
+        onClick={() => {
+          this.props.unSaveTasks();         
+          message.loading('delete', 1)
+            .then(() => message.success('unsaved data in local'))
+        }}
+        >
+              <RiDeleteBack2Fill/>
+              UNSAVE
+        </Button>
+              </div>
+
+        <hr/>
         <Heading>Task to do</Heading>
         <table.Table>
           <table.Thead>
-            {this.props.tasks.map(task => {
+            {newPropsTasks?.map(task => {
               if(task.status){
                 return (
                   <table.Tr key={task.id}>
@@ -95,7 +165,7 @@ class Todolist extends Component {
         <Heading>Task complete</Heading>
         <table.Table>
           <table.Thead>
-          {this.props.tasks?.map(task => {
+          {newPropsTasks?.map(task => {
               if(!task.status){
                 return (
                   <table.Tr key={task.id}>
@@ -132,23 +202,29 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  changeTheme: value => {
+  changeTheme(value) {
     dispatch(changeTheme(value))
   },
-  addTask: value => {
+  addTask(value) {
   dispatch(addTask(value))
   },
-  checkTask: value => {
+  checkTask(value) {
     dispatch(checkTask(value));
   },
-  deleTask: value => {
+  deleTask(value) {
     dispatch(deleTask(value));
   },
-  editTask: value => {
+  editTask(value) {
     dispatch(editTask(value));
   },
-  updateTask: value => {
+  updateTask(value) {
     dispatch(updateTask(value));
+  },
+  saveTasks() {
+    dispatch(saveTasks())
+  },
+  unSaveTasks() {
+    dispatch(unsaveTask())
   }
 })
 

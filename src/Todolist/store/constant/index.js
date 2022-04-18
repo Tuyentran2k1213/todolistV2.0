@@ -4,3 +4,5 @@ export const CHECK_TASK = 'checking task';
 export const DELE_TASK = 'delete task';
 export const EDIT_TASK = 'edit the task';
 export const UPDATE_TASK = 'update the task';
+export const SAVE_LIST = 'save the task list';
+export const UNSAVE_LIST = 'unsave task list';

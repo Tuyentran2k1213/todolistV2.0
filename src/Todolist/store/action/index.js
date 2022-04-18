@@ -1,4 +1,4 @@
-import { CHANGE_THEME, ADD_TASK, CHECK_TASK, DELE_TASK, EDIT_TASK, UPDATE_TASK } from "../constant";
+import { CHANGE_THEME, ADD_TASK, CHECK_TASK, DELE_TASK, EDIT_TASK, UPDATE_TASK, SAVE_LIST, UNSAVE_LIST } from "../constant";
 
 export const changeTheme = payload => ({
     type: CHANGE_THEME,
@@ -28,4 +28,12 @@ export const editTask = payload => ({
 export const updateTask = payload => ({
     type: UPDATE_TASK,
     payload,
+})
+
+export const saveTasks = () => ({
+    type: SAVE_LIST
+})
+
+export const unsaveTask = () => ({
+    type: UNSAVE_LIST,
 })
